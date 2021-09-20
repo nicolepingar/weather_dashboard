@@ -6,27 +6,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Dashboard</title>
+    <script src="https://use.fontawesome.com/ef05d244be.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
 <body>
     <nav class="navbar navbar-light bg-light">
-        <span class="navbar-brand mb-0 h1">Weather Dashboard</span>
+        <p class="navbar-brand mb-0 h1"><i class="fas fa-rainbow"></i>Weather Dashboard</p>
     </nav>
 
     <div class="card" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title">Search for a City:</h5>
-            <div class="input-group mb-3 searchForm">
-                <input type="text" class="form-control inputField" name="inputField" placeholder="Philadelphia" aria-describedby="button-addon2">
+            <form class="input-group mb-3 searchForm">
+                <input type="text" class="form-control inputField" name="inputField" placeholder="Philadelphia"
+                    aria-describedby="button-addon2">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary searchButton" type="button" id="button-addon2">Search</button>
+                    <button class="btn btn-outline-secondary searchButton" type="submit"
+                        id="button-addon2">Search</button>
                 </div>
-            </div>
+            </form>
             <section class="ul"></section>
         </div>
     </div>
+
+    <div class="container currentWeather"></div>
+
+    <div class="weekForecast"></div>
+
+
 
 
 
