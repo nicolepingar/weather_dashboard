@@ -1,3 +1,4 @@
+// global variables
 var inputField = $(".inputField");
 var searchButton = $(".searchButton");
 var ulEl = $(".ul")
@@ -5,8 +6,11 @@ var form = $(".input-group")
 var cityStorage = [];
 var urlFront = "https://api.openweathermap.org/data/2.5/weather?q="
 var urlEnd = "&units=imperial&appid=25228def002124465df0a57cc9a5803b"
+var urlFront2 = "https://api.openweathermap.org/data/2.5/onecall?lat="
+var urlEnd2 = "&units=imperial&exclude=minutely,hourly,alerts&appid=25228def002124465df0a57cc9a5803b"
 var currentWeatherContainer = $(".currentWeather")
 var weekWeatherContainer = $(".weekForecast")
+var weekHeaderClass = $(".weekHeader")
 var today = moment();
 var localButton = $(".localButton")
 // this function renders the data from local storage and creates buttons for each string in the object 
@@ -14,7 +18,6 @@ function renderCities() {
     ulEl.empty(); // this prevents it from creating new buttons twice, once from storage and once from adding the button new
     for (var i = 0; i < cityStorage.length; i++) {
         var cityEl = cityStorage[i];
-        console.log(cityEl);
         var liEl = $("<button>");
         liEl.text(cityEl).addClass("btn btn-secondary btn-lg btn-block localButton");
         ulEl.append(liEl);
@@ -32,19 +35,14 @@ function init() {
 function searchForm(event) {
     event.preventDefault();
     var cities = inputField.val();
-    console.log(cities);
     if (cities === "") {
         return;
     }
+    
     cityStorage.push(cities);
     inputField.val("");
     localStorage.setItem("cityStorage", JSON.stringify(cityStorage));
     renderCities();
-
-
-    // if (!cities) {
-    //     cities = localButton.val();
-    // }
 
 
     var newURL = urlFront.concat(cities, urlEnd)
@@ -56,8 +54,68 @@ function searchForm(event) {
         .then(function (data) {
             console.log(data);
 
-            var currentDateEl = $("<h2>").text(today.format("ddd, MMM Do, YYYY"))
+            $(".col-10").addClass("border my-3")
+            var currentCity = data.name
+
+            var currentDateEl = $("<h2>").text(currentCity + " (" + today.format("ddd, MMM Do, YYYY") + ")")
             currentWeatherContainer.append(currentDateEl);
+
+            var description = data.weather[0].description
+            if (description === "clear sky") {
+                var icon = $('<img />',
+                    {id: 'myid',
+                        src: './assets/images/clear-sky.jpg',
+                        width: 50 })
+                currentDateEl.append(icon)
+            } else if (description === "few clouds") {
+                var icon = $('<img />',
+                {id: 'myid',
+                    src: './assets/images/few-clouds.jpg',
+                    width: 50 })
+                    currentDateEl.append(icon)
+            } else if (description === "scattered clouds") {
+                var icon = $('<img />',
+                {id: 'myid',
+                    src: './assets/images/scattered-clouds.jpg',
+                    width: 50 })
+                    currentDateEl.append(icon)
+            } else if (description === "broken clouds") {
+                var icon = $('<img />',
+                {id: 'myid',
+                    src: './assets/images/broken-clouds.jpg',
+                    width: 50 })
+                    currentDateEl.append(icon)
+            } else if (description = "shower rain") {
+                var icon = $('<img />',
+                {id: 'myid',
+                    src: './assets/images/shower.jpg',
+                    width: 50 })
+                    currentDateEl.append(icon)
+            } else if (description = "rain") {
+                var icon = $('<img />',
+                {id: 'myid',
+                    src: './assets/images/rain.jpg',
+                    width: 50 })
+                    currentDateEl.append(icon)
+            } else if (description = "thunderstorm") {
+                var icon = $('<img />',
+                {id: 'myid',
+                    src: './assets/images/idk.jpg',
+                    width: 50 })
+                    currentDateEl.append(icon)
+            } else if (description = "snow") {
+                var icon = $('<img />',
+                {id: 'myid',
+                    src: './assets/images/snow.jpg',
+                    width: 50 })
+                    currentDateEl.append(icon)
+            } else 
+            var icon = $('<img />',
+            {id: 'myid',
+                src: './assets/images/mist.jpg',
+                width: 50 })
+                currentDateEl.append(icon)
+
 
             var currentTemp = data.main.temp
             var currentTempEl = $("<h3>");
@@ -91,6 +149,7 @@ function searchForm(event) {
                     var uvi = data.current.uvi
                     var uviEl = $("<h3>");
                     uviEl.text("UV Index: " + uvi)
+                    uviEl.addClass("uvi")
                     currentWeatherContainer.append(uviEl);
                     console.log(typeof uvi);
                     if (uvi < 2) {
@@ -104,9 +163,71 @@ function searchForm(event) {
                     }
                     else
                         uviEl.css("background-color", "red")
-                    for (var i = 0; i < 5; i++) {
-                        var weekDateEl = $("<h4>").text(today.add((24), "hours").format("ddd, MMM Do, YYYY"))
-                        currentWeatherContainer.append(weekDateEl);
+                    // start of weekly weather
+                    var headerWeek = $('<h2>');
+                    headerWeek.text("Five Day Weather Forecast");
+                    weekWeatherContainer.append(headerWeek);
+
+                        for (var i = 0; i < 5; i++) {
+                        var weekDateEl = $("<h4>").text(today.add((24), "hours").format("ddd, MMM Do"))
+                        weekDateEl.addClass("col card m-1")
+                        weekHeaderClass.append(weekDateEl);
+
+                        var description = data.daily[i].weather[0].description;
+                        if (description === "clear sky") {
+                            var icon = $('<img />',
+                                {id: 'myid',
+                                    src: './assets/images/clear-sky.jpg',
+                                    width: 50 })
+                            weekDateEl.append(icon)
+                        } else if (description === "few clouds") {
+                            var icon = $('<img />',
+                            {id: 'myid',
+                                src: './assets/images/few-clouds.jpg',
+                                width: 50 })
+                            weekDateEl.append(icon)
+                        } else if (description === "scattered clouds") {
+                            var icon = $('<img />',
+                            {id: 'myid',
+                                src: './assets/images/scattered-clouds.jpg',
+                                width: 50 })
+                            weekDateEl.append(icon)
+                        } else if (description === "broken clouds") {
+                            var icon = $('<img />',
+                            {id: 'myid',
+                                src: './assets/images/broken-clouds.jpg',
+                                width: 50 })
+                            weekDateEl.append(icon)
+                        } else if (description = "shower rain") {
+                            var icon = $('<img />',
+                            {id: 'myid',
+                                src: './assets/images/shower.jpg',
+                                width: 50 })
+                            weekDateEl.append(icon)
+                        } else if (description = "rain") {
+                            var icon = $('<img />',
+                            {id: 'myid',
+                                src: './assets/images/rain.jpg',
+                                width: 50 })
+                            weekDateEl.append(icon)
+                        } else if (description = "thunderstorm") {
+                            var icon = $('<img />',
+                            {id: 'myid',
+                                src: './assets/images/idk.jpg',
+                                width: 50 })
+                            weekDateEl.append(icon)
+                        } else if (description = "snow") {
+                            var icon = $('<img />',
+                            {id: 'myid',
+                                src: './assets/images/snow.jpg',
+                                width: 50 })
+                            weekDateEl.append(icon)
+                        } else 
+                        var icon = $('<img />',
+                        {id: 'myid',
+                            src: './assets/images/mist.jpg',
+                            width: 50 })
+                        weekDateEl.append(icon)
 
                         var weekTemp = data.daily[i].temp.day
                         var weekTempEl = $("<h5>");
@@ -123,15 +244,29 @@ function searchForm(event) {
                         weekHumidEl.text("Humidity: " + weekHumid + "%");
                         weekWindEl.append(weekHumidEl);
                     }
-
                 })
-
-
         })
-
 }
 
 searchButton.on("click", searchForm)
+
+
+//!!!! test
+function buttonClick(event) {
+    event.preventDefault();
+
+ var cities2 = $(this).val();
+ console.log(cities2);
+
+
+
+}
+
+
+localButton.on("click", buttonClick)
+
+
+
 // localButton.on("click", searchForm)
 // calls init function 
 init();
@@ -141,8 +276,7 @@ init();
 
 // var ogUrl = "https://api.openweathermap.org/data/2.5/weather?q=Los Angeles&units=imperial&appid=25228def002124465df0a57cc9a5803b"
 
-var urlFront2 = "https://api.openweathermap.org/data/2.5/onecall?lat="
-var urlEnd2 = "&units=imperial&exclude=minutely,hourly,alerts&appid=25228def002124465df0a57cc9a5803b"
+
 
     // fetch("https://api.openweathermap.org/data/2.5/onecall?lat=39.9523&lon=-75.1638&units=imperial&exclude=minutely,hourly,alerts&appid=25228def002124465df0a57cc9a5803b")
     //     .then(function (potato) {

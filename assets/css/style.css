@@ -1,0 +1,25 @@
+.col {
+    background-color: #6c757d;
+    color: white;
+}
+
+.card {
+    max-width: 18%;
+    display: inline-block;
+}
+
+.uvi{
+   display: inline-block;
+}
+
+.navbar {
+    background-color: white;
+}
+
+.h1 {
+    font-size: 30px;
+}
+
+body {
+    background-color: #FFB6C1;
+}
