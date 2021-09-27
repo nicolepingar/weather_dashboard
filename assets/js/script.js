@@ -39,7 +39,9 @@ function searchForm(event) {
     if (cities === "") { // if there is nothing in the input field, nothing happens 
         return;
     }
-    cityStorage.push(cities); // pushes input field value onto empty array 
+    if (!cityStorage.includes(cities)) {
+        cityStorage.push(cities); // pushes input field value onto empty array 
+    } 
     localStorage.setItem("cityStorage", JSON.stringify(cityStorage)); // sets input field value in local storage 
      
     getCityInfo(cities) // calls function with cities as variable
@@ -64,6 +66,7 @@ var getCityInfo = function (cities, cities2) {
             }
         })
         .then(function (data) {
+            console.log(data);
             currentWeatherContainer.empty(); // empties the container so each time a button is pressed or a city is searched, it replaced the old data 
             $(".col-10").addClass("border my-3") 
             var currentCity = data.name
